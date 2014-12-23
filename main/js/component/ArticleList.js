@@ -245,7 +245,7 @@ com.worksap.bootcamp.webeditor.component.BeforeListChangeEvent = function (oldIn
     this.newIndex = newIndex;
     this.canChange = canChange;
 };
- 
+
 /**
  * Event after the selected list item is changed.
  * @param oldIndex
