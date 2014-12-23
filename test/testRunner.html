@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Test Runner for Debugging - Client Side Intermediate</title>
+    <script type="text/javascript" src="../lib/closure-library/closure/goog/base.js"></script>
+    <script type="text/javascript">
+        goog.require('goog.testing.MultiTestRunner');
+    </script>
+    <link rel="stylesheet" type="text/css" href="../lib/closure-library/closure/goog/css/multitestrunner.css">
+</head>
+<body>
+<main id="runner"></main>
+<script type="text/javascript">
+    var runner = new goog.testing.MultiTestRunner();
+    runner.addTests([
+        'html/component/ArticleEditorTest.html',
+        'html/component/ArticleListTest.html'
+    ]);
+    runner.render(document.getElementById('runner'));
+</script>
+</body>
+</html>

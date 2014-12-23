@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test for ArticleEditor.js</title>
+    <link rel="stylesheet" type="text/css" href="../../../main/css/webeditor.css"/>
+    <script type="text/javascript" src="../../../lib/closure-library/closure/goog/base.js"></script>
+    <script type="text/javascript">
+        goog.require('goog.dom');
+        goog.require('goog.ui.Component');
+        goog.require('goog.events.Event');
+        goog.require('goog.testing.jsunit');
+        goog.require('goog.testing.AsyncTestCase');
+    </script>
+    <script type="text/javascript" src="../../../main/js/component/ArticleEditor.js"></script>
+</head>
+<body>
+<main>
+    <article id="editor" class="article-editor">
+        <form>
+            <label for="editor-title">Title</label>
+
+            <p id="editor-error-messages" class="article-title-error-messages"></p>
+            <input id="editor-title" class="article-title" type="text"/>
+            <label for="editor-content">Content</label>
+            <textarea id="editor-content" class="article-content"></textarea>
+        </form>
+    </article>
+</main>
+<hr style="clear: both;"/>
+<script type="text/javascript" src="../../js/component/ArticleEditorTest.js"></script>
+</body>
+</html>
