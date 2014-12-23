@@ -273,7 +273,7 @@ com.worksap.bootcamp.webeditor.Application = function (articleDao, validator) {
             }
             else {
                 editor.setTitleValidationStatus(com.worksap.bootcamp.webeditor.component.ArticleEditor.ValidationStatus.INVALID, msg);
-                goog.dom.getElement('save-button').classList.remove('goog-toolbar-button-disabled');
+                goog.dom.getElement('save-button').classList.add('goog-toolbar-button-disabled');
             }
         });
     };

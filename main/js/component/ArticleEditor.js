@@ -60,7 +60,7 @@ com.worksap.bootcamp.webeditor.component.ArticleEditor.EventType = {
     ArticleEditor.prototype.decorateInternal = function ($element) {
         this.title = goog.dom.getElement('editor-title');
         this.content = goog.dom.getElement('editor-content');
-        this.errorMsg = goog.dom.getElement('editor-content');
+        this.errorMsg = goog.dom.getElementByClass('article-title-error-messages');
     };
 
     /**

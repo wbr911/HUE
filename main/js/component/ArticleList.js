@@ -109,6 +109,7 @@ com.worksap.bootcamp.webeditor.component.ArticleList.prototype.setItem = functio
     var item = this.getItem(index);
     item.text = text;
     item.data = data;
+    goog.dom.getElement(item.elementId).innerText = text;
     return goog.object.clone(item);
 };
 
