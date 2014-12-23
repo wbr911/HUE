@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Web Text Editor</title>
+    <meta charset="UTF-8"/>
+    <link rel="stylesheet" type="text/css" href="css/webeditor.css"/>
+</head>
+<body>
+<header>
+    <h1>Web Text Editor</h1>
+</header>
+<div id="toolbar" class="goog-toolbar">
+    <div id="new-button" class="goog-toolbar-button new-button btn">New</div>
+    <div id="save-button" class="goog-toolbar-button save-button btn">Save</div>
+    <div id="delete-button" class="goog-toolbar-button delete-button btn">Delete</div>
+</div>
+<nav id="article-list">
+    <ul id="article-list-ul" class="article-list">
+    </ul>
+</nav>
+<main>
+    <article id="editor" class="article-editor">
+        <label for="editor-title" class="label">Title</label>
+
+        <div class="article-title-error-messages"></div>
+        <input id="editor-title" class="article-title round fullWidth" type="text"/>
+        <label for="editor-content" class="label">Content</label>
+        <textarea id="editor-content" class="article-content round fullWidth"></textarea>
+    </article>
+</main>
+
+<!-- for debugging -->
+
+<script type="text/javascript" src="../lib/closure-library/closure/goog/base.js"></script>
+
+<script>
+    goog.require('goog.ui.Component');
+    goog.require('goog.ui.Toolbar');
+    goog.require('goog.ui.ToolbarButton');
+</script>
+<script type="text/javascript" src="js/mock/mock.js"></script>
+<script type="text/javascript" src="js/dao/ArticleDao.js"></script>
+<script type="text/javascript" src="js/validator/Validator.js"></script>
+<script type="text/javascript" src="js/component/ArticleList.js"></script>
+<script type="text/javascript" src="js/component/ArticleEditor.js"></script>
+<script type="text/javascript" src="js/Application.js"></script>
+<script type="text/javascript" src="js/init.js"></script>
+
+
+<!-- for product -->
+<!--<script type="text/javascript" src="js/webeditor.js"></script>-->
+</body>
+</html>

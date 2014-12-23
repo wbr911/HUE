@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <title>Test for ArticleEditor.js</title>
+    <link rel="stylesheet" type="text/css" href="../../../main/css/webeditor.css"/>
+    <script type="text/javascript" src="../../../lib/closure-library/closure/goog/base.js"></script>
+    <script type="text/javascript">
+        goog.require('goog.dom');
+        goog.require('goog.ui.Component');
+        goog.require('goog.events.Event');
+        goog.require('goog.testing.jsunit');
+        goog.require('goog.testing.AsyncTestCase');
+    </script>
+    <script type="text/javascript" src="../../../main/js/component/ArticleList.js"></script>
+</head>
+<body>
+<nav id="article-list">
+    <ul id="article-list-ul" class="article-list">
+        <li id="article-list-ul-item-1" class="active">Article 1</li>
+        <li id="article-list-ul-item-5">Article 2</li>
+    </ul>
+</nav>
+<hr style="clear: both;"/>
+<script type="text/javascript" src="../../js/component/ArticleListTest.js"></script>
+</body>
+</html>
