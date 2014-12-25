@@ -58,9 +58,10 @@ com.worksap.bootcamp.webeditor.component.ArticleEditor.EventType = {
      * @override
      */
     ArticleEditor.prototype.decorateInternal = function ($element) {
-        this.title = goog.dom.getElement('editor-title');
-        this.content = goog.dom.getElement('editor-content');
-        this.errorMsg = goog.dom.getElementByClass('article-title-error-messages');
+        var domHelper = this.getDomHelper();
+        this.title = domHelper.getElement('editor-title');
+        this.content = domHelper.getElement('editor-content');
+        this.errorMsg = domHelper.getElementByClass('article-title-error-messages');
     };
 
     /**
@@ -189,7 +190,7 @@ com.worksap.bootcamp.webeditor.component.ArticleEditor.EventType = {
      * @returns {boolean}
      */
     ArticleEditor.prototype.isTitleValid = function () {
-        //
+
     };
 
     /**

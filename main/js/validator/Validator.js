@@ -19,14 +19,14 @@ com.worksap.bootcamp.webeditor.validator.Validator = function (articleDao) {
      *   2nd arg: the error message if the target is invalid, otherwise not assigned (undefined).
      */
     Validator.prototype.validateTitle = function (id, title, callback) {
-        if (title == '' || title == undefined) {
+        if (title === '' || title === undefined) {
             callback(false, 'title can not be empty');
             return;
         }
-        this.articleDao.findAllArticles(function (articles) {
-            var l = articles.length;
+        this.articleDao.findTitles(function (titles) {
+            var l = titles.length;
             for (var i = 0; i < l; i++) {
-                if (articles[i].title == title && articles[i].id != id) {
+                if (titles[i] === title && i !== id) {
                     callback(false, 'title already exists');
                     return;
                 }

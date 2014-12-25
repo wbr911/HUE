@@ -54,7 +54,8 @@ com.worksap.bootcamp.webeditor.Application = function (articleDao, validator) {
      * @param {Element} $listUl
      * @param {Element} $editor
      * @returns {{
-   *   toolbar: Element,
+   *   toolbar: goog.ui.Toolbar,
+   *   buttons: Object.<string, goog.ui.ToolbarButton>,
    *   list: com.worksap.bootcamp.webeditor.component.ArticleList,
    *   editor: com.worksap.bootcamp.webeditor.component.ArticleEditor
    * }}
@@ -64,8 +65,14 @@ com.worksap.bootcamp.webeditor.Application = function (articleDao, validator) {
         editor.decorate($editor);
         var articleList = new com.worksap.bootcamp.webeditor.component.ArticleList();
         articleList.decorate($listUl);
+        var toolbar = new goog.ui.Toolbar();
+        toolbar.decorate($toolbar);
+        var newButton =toolbar.getChild('new-button');
+        var saveButton = toolbar.getChild('save-button');;
+        var deleteButton = toolbar.getChild('delete-button');
         return {
-            toolbar: $toolbar,
+            toolbar: toolbar,
+            buttons: {newButton: newButton, saveButton: saveButton, deleteButton: deleteButton},
             list: articleList,
             editor: editor
         }
@@ -82,10 +89,11 @@ com.worksap.bootcamp.webeditor.Application = function (articleDao, validator) {
      */
     Application.prototype.bindEvents = function (components) {
         goog.events.listen(components.editor, com.worksap.bootcamp.webeditor.component.ArticleEditor.EventType.VALIDATE_TITLE, this.onValidateTitle_, false, this);
-        goog.events.listen(components.toolbar, goog.events.EventType.CLICK, this.onToolbarButtonClick_, false, this);
+        goog.events.listen(components.toolbar,goog.ui.Component.EventType.ACTION,this.onToolbarButtonClick_, false, this);
+        goog.events.listen(components.buttons.saveButton , goog.events.EventType.CLICK,function(){alert('test')},false,this);
         goog.events.listen(components.list, com.worksap.bootcamp.webeditor.component.ArticleList.EventType.BEFORE_CHANGE, this.onListChanging_, false, this);
         goog.events.listen(components.list, com.worksap.bootcamp.webeditor.component.ArticleList.EventType.CHANGE, this.onListChange_, false, this);
-        goog.events.listen(document, goog.events.EventType.KEYDOWN,this.onKeyDown_,false,this);
+        goog.events.listen(document, goog.events.EventType.KEYDOWN, this.onKeyDown_, false, this);
         this.fillData(components);
     };
     /**
@@ -99,14 +107,26 @@ com.worksap.bootcamp.webeditor.Application = function (articleDao, validator) {
      * @private
      */
     Application.prototype.fillData = function (components) {
-        this.daos_.articleDao.findAllArticles(function (articles) {
-            if(!articles || articles.length==0){
+        var self = this;
+        this.daos_.articleDao.findTitles(function (titles) {
+            if (!titles || titles.length == 0) {
                 components.editor.disable();
-            }else {
-                components.list.init(articles);
+            } else {
+                var len = titles.length;
+                var isFirst = true;
+                for(var i = 0 ; i < len ;i++){
+                    if(titles[i]){
+                        self.daos_.articleDao.findById(i,function(data){
+                            components.list.addItem(data.title,data,isFirst);
+                            if(isFirst){isFirst = false;}
+                        });
+                    }
+                }
             }
         });
-
+        // select the first article in the list
+        var list = self.components_.list;
+       // list.setSelectedIndex(list.getNthItem(1).index);
 
     }
     /**
@@ -133,10 +153,13 @@ com.worksap.bootcamp.webeditor.Application = function (articleDao, validator) {
      */
     Application.prototype.onListChange_ = function (event) {
         var newItem = this.components_.list.getItem(event.newIndex);
+        this.components_.editor.setTitleValidationStatus(com.worksap.bootcamp.webeditor.component.ArticleEditor.ValidationStatus.VALID);
         if (newItem) {
             this.components_.editor.enable();
             this.components_.editor.setArticle(newItem.data.title, newItem.data.content);
+            this.components_.toolbar.setEnabled(true);
         } else {
+            this.components_.toolbar.setEnabled(false);
             this.components_.editor.disable();
             this.components_.editor.setArticle('', '');
         }
@@ -165,7 +188,7 @@ com.worksap.bootcamp.webeditor.Application = function (articleDao, validator) {
      * @private
      */
     Application.prototype.onToolbarButtonClick_ = function (event) {
-        switch (event.target.getAttribute('id')) {
+        switch (event.target.getId()) {
             case 'save-button':
                 this.onSaveButtonAction_(event);
                 break;
@@ -245,7 +268,7 @@ com.worksap.bootcamp.webeditor.Application = function (articleDao, validator) {
      * @private
      */
     Application.prototype.onDeleteButtonAction_ = function (event) {
-        if(!confirm('sure to delete?')){
+        if (!confirm('sure to delete?')) {
             return;
         }
         var selectedIndex = this.components_.list.getSelectedIndex();
@@ -261,19 +284,19 @@ com.worksap.bootcamp.webeditor.Application = function (articleDao, validator) {
      * @private
      */
     Application.prototype.onValidateTitle_ = function (event) {
+        var buttons = this.components_.buttons;
         var editor = this.components_.editor;
-        var toolbar = this.components_.toolbar;
         editor.setTitleValidationStatus(com.worksap.bootcamp.webeditor.component.ArticleEditor.ValidationStatus.VALIDATING);
         var selectedIndex = this.components_.list.getSelectedIndex();
         var titleId = this.components_.list.getItem(selectedIndex).data.id;
         this.validators_.validator.validateTitle(titleId, event.title, function (res, msg) {
             if (res) {
                 editor.setTitleValidationStatus(com.worksap.bootcamp.webeditor.component.ArticleEditor.ValidationStatus.VALID);
-                goog.dom.getElement('save-button').classList.remove('goog-toolbar-button-disabled');
+                buttons.saveButton.setEnabled(true);
             }
             else {
                 editor.setTitleValidationStatus(com.worksap.bootcamp.webeditor.component.ArticleEditor.ValidationStatus.INVALID, msg);
-                goog.dom.getElement('save-button').classList.add('goog-toolbar-button-disabled');
+                buttons.saveButton.setEnabled(false);
             }
         });
     };
@@ -285,15 +308,15 @@ com.worksap.bootcamp.webeditor.Application = function (articleDao, validator) {
      */
     Application.prototype.onKeyDown_ = function (event) {
         var len = this.shortcutKeys_.length;
-        for(var i = 0 ; i< len ;i++){
-            var rule =this.shortcutKeys_[i];
-            if(rule.alt ==event.altKey &&
-               rule.ctrl == event.ctrlKey&&
-               rule.shift == event.shiftKey&&
-               rule.key == event.keyCode){
+        for (var i = 0; i < len; i++) {
+            var rule = this.shortcutKeys_[i];
+            if (rule.alt == event.altKey &&
+                rule.ctrl == event.ctrlKey &&
+                rule.shift == event.shiftKey &&
+                rule.key == event.keyCode) {
                 // such as ctrl s
                 event.preventDefault();
-                rule.event.call(this,event);
+                rule.event.call(this, event);
             }
         }
     };

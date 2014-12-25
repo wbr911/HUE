@@ -46,22 +46,6 @@ com.worksap.bootcamp.webeditor.dao.ArticleDao = function (mockData) {
             }
         }, 0);
     };
-    ArticleDao.prototype.findAllArticles = function (callback) {
-        var _self = this;
-        window.setTimeout(function () {
-            var articles = [];
-            for (var id in _self.data_) {
-                if (!_self.data_.hasOwnProperty(id)) {
-                    continue;
-                }
-                articles.push(_self.data_[id]);
-            }
-            if (callback) {
-                callback.call(null, articles);
-            }
-        }, 0);
-    };
-
     /**
      *
      * @param {number} id

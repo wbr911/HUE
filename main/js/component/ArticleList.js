@@ -28,6 +28,7 @@ com.worksap.bootcamp.webeditor.component.ArticleList.EventType = {
     BEFORE_CHANGE: goog.events.getUniqueId('before-change'),
     /** dispatched after the selected item is changed. */
     CHANGE: goog.events.getUniqueId('change')
+
 };
 
 /**
@@ -57,28 +58,16 @@ com.worksap.bootcamp.webeditor.component.ArticleList.prototype.decorateInternal 
 
 };
 /**
- * @param {Array.<{id: number, title: string, content: string}>} datas.
- */
-com.worksap.bootcamp.webeditor.component.ArticleList.prototype.init = function (datas) {
-
-    var isFirst = true;
-    for (var id in datas) {
-        if (!datas.hasOwnProperty(id)) {
-            continue;
-        }
-        this.addItem(datas[id].title, datas[id], isFirst);
-        if (isFirst) {
-            isFirst = false;
-        }
-    }
-}
-/**
  * Add a new item to the list component.
  * @param {string} text displayed title (no html-escape needed)
  * @param {?Object} data data associated to the list item (for util).
  * @param {boolean} selected whether the item will be selected (if it can be)
  * @returns {Object.<{index: number, elementId: string, text: string, data: ?*}>}
- *   information of the registered item.
+ *
+ *  original return type is {index: number, elementId: string, text: string, data: ?*}
+ *  however the function goog.object.clone(itemData) return !Object.<K,V> ,which cannot meet the it in compiler
+ *  so I change the JSdoc as {Object.<{index: number, elementId: string, text: string, data: ?*}>}
+ *
  */
 com.worksap.bootcamp.webeditor.component.ArticleList.prototype.addItem = function (text, data, selected) {
     // TODO: implement method
@@ -167,7 +156,7 @@ com.worksap.bootcamp.webeditor.component.ArticleList.prototype.getSelectedIndex 
  * @param {number} newIndex
  */
 com.worksap.bootcamp.webeditor.component.ArticleList.prototype.setSelectedIndex = function (newIndex) {
-    if (this.selectedIndex == newIndex) {
+    if (this.selectedIndex === newIndex) {
         return;
     }
     // to find the nearest item above newIndex if list[newIndex] has already been deleted
@@ -177,7 +166,7 @@ com.worksap.bootcamp.webeditor.component.ArticleList.prototype.setSelectedIndex 
             selectedItem = this.list[newIndex--];
         }
         newIndex++;
-        if (newIndex == 0) {
+        if (newIndex === 0) {
             this.dispatchEvent(new com.worksap.bootcamp.webeditor.component.ListChangeEvent(this.selectedIndex, -1));
             return;
         }
@@ -185,7 +174,12 @@ com.worksap.bootcamp.webeditor.component.ArticleList.prototype.setSelectedIndex 
     if (!selectedItem) {
         return;
     }
-    var oldItem = goog.dom.findNode(this.root,function(node){if(node instanceof HTMLElement && node.getAttribute('class')=='active'){return true} return false});
+    var oldItem = goog.dom.findNode(this.root,function(node){
+        if(node instanceof HTMLElement && node.getAttribute('class')=='active')
+        {
+            return true
+        } return false
+    });
     if (oldItem) {
         oldItem.classList.remove('active');
     }
@@ -211,7 +205,7 @@ com.worksap.bootcamp.webeditor.component.ArticleList.prototype.enterDocument = f
 com.worksap.bootcamp.webeditor.component.ArticleList.prototype.onListClick_ = function (event) {
     var id = event.target.getAttribute('id');
     var newIndex = Number(id.replace(com.worksap.bootcamp.webeditor.component.ArticleList.elementIDprefix, ''));
-    if (newIndex == this.selectedIndex) {
+    if (newIndex === this.selectedIndex) {
         return;
     }
     this.dispatchEvent(new com.worksap.bootcamp.webeditor.component.BeforeListChangeEvent(this.selectedIndex, newIndex, true));
@@ -222,7 +216,7 @@ com.worksap.bootcamp.webeditor.component.ArticleList.prototype.onListClick_ = fu
  * @param {number} newIndex index of the item
  */
 com.worksap.bootcamp.webeditor.component.ArticleList.prototype.changeSelectedItem = function (newIndex) {
-    goog.dom.getElement( this.list[newIndex].elementId).click();
+    goog.dom.getElement(this.list[newIndex].elementId).click();
 }
 /**
  * @override
