@@ -1,0 +1,35 @@
+.metadata
+.project
+.classpath
+.checkstyle
+.settings/
+target/
+bin/
+# *.db
+Thumbs.db
+*.log
+*.bak
+*.swp
+*~
+
+nbproject/
+# closure-library
+Gruntfile.js
+deps.js
+node_modules/
+build/
+.sass-cache
+.jshintrc
+jasmine-template.tmpl
+
+# Following resources are supplied by company-client-build-scripts
+# You should not edit it.
+package.json
+jsdoc-conf.json
+
+/*.bat
+
+accounts.json
+datasets
+ldgourmet.tar.gz
+bootcamp-elasticsearch.tar.gz

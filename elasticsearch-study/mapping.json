@@ -1,0 +1,220 @@
+{
+  "settings": {
+    "analysis": {
+      "analyzer": {
+        "ngram_analyzer": {
+          "tokenizer": "ngram_tokenizer",
+          "type": "custom"
+        },
+        "romanize_analyzer": {
+          "tokenizer": "whitespace",
+          "filter": [
+            "lowercase",
+            "cjk_width",
+            "kana_filter",
+            "standard",
+            "katakana_stemmer",
+            "kuromoji_readingform"
+          ],
+          "char_filter": [
+          "kuromoji_iteration_mark"
+          ],
+          "type": "custom"
+        },
+        "ja_analyzer": {
+          "tokenizer": "kuromoji_tokenizer",
+          "filter": [
+          "lowercase",
+          "cjk_width",
+          "kuromoji_baseform",
+          "ja_sentence_filter",
+          "katakana_stemmer"
+          ],
+          "char_filter": [
+          "kuromoji_iteration_mark"
+          ],
+          "type": "custom"
+          },
+        "edgengram_analyzer": {
+          "tokenizer": "edgengram_tokenizer",
+          "type": "custom"
+        },
+        "backededgengram_analyzer": {
+          "tokenizer": "whitespace",
+          "filter": [
+          "reverse",
+          "edgengram",
+          "reverse"
+          ],
+          "type": "custom"
+        }
+      },
+      "filter":{
+          "kana_filter": {
+            "type": "icu_transform",
+            "id": "Hiragana-Katakana"
+          },
+          "katakana_stemmer": {
+            "type": "kuromoji_stemmer",
+            "minimum_length": "4"
+          },
+          "ja_sentence_filter": {
+            "stoptags": [
+              "記号-一般",
+              "記号-読点",
+              "記号-句点",
+              "記号-括弧開",
+              "記号-括弧閉",
+              "助詞",
+              "助詞-格助詞",
+              "助詞-格助詞-一般",
+              "助詞-格助詞-引用",
+              "助詞-格助詞-連語",
+              "助詞-係助詞",
+              "助詞-間投助詞",
+              "助詞-接続助詞",
+              "助詞-終助詞",
+              "助詞-副詞化",
+              "助詞-副助詞",
+              "助詞-並立助詞",
+              "助詞-連体化",
+              "助動詞",
+              "接続詞",
+              "フィラー",
+              "副詞-一般",
+              "副詞-助詞類接続",
+              "名詞-接尾-特殊"
+            ],
+            "type": "kuromoji_part_of_speech"
+          },
+          "edgengram": {
+            "max_gram": "255",
+            "min_gram": "1",
+            "type": "edgeNGram"
+          }
+        },
+      "tokenizer": {
+        "ngram_tokenizer": {
+          "type": "nGram",
+          "min_gram": "2",
+          "max_gram": "3",
+          "token_chars": [
+            "letter",
+            "digit"
+          ]
+        },
+        "edgengram_tokenizer": {
+          "max_gram": "255",
+          "min_gram": "1",
+          "token_chars": [ "letter", "digit" ],
+          "type": "edgeNGram"
+        }
+      }
+    }
+  },
+  "mappings": {
+    "restaurant": {
+      "_id": {
+        "path": "id"
+      },
+      "properties": {
+        "id": {
+          "type": "integer",
+          "index": "not_analyzed"
+        },
+        "name": {
+          "fields": {
+            "raw": {
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "backededgengram": {
+              "analyzer": "backededgengram_analyzer",
+              "type": "string"
+            }
+          },
+          "type": "string",
+          "analyzer": "ngram_analyzer"
+        },
+        "name_kana": {
+          "fields": {
+            "raw": {
+              "index": "not_analyzed",
+              "type": "string"
+            },
+            "romanize": {
+              "analyzer": "romanize_analyzer",
+              "type": "string"
+            },
+            "backededgengram": {
+              "analyzer": "backededgengram_analyzer",
+              "type": "string"
+            }
+          },
+          "type": "string",
+          "analyzer": "ngram_analyzer"
+        },
+        "address": {
+          "fields": {
+            "raw": {
+              "index": "not_analyzed",
+              "type": "string"
+            }
+          },
+          "type": "string",
+          "analyzer": "ngram_analyzer"
+        },
+        "description": {
+          "type": "string",
+          "analyzer": "ja_analyzer"
+        },
+        "purpose": {
+          "type": "string",
+          "analyzer": "ngram_analyzer"
+        },
+        "photo_count": {
+          "type": "integer"
+        },
+        "menu_count": {
+          "type": "integer"
+        },
+        "access_count": {
+          "type": "integer"
+        },
+        "closed": {
+          "type": "boolean"
+        },
+        "location": {
+          "type": "geo_point"
+        }
+      }
+    },
+    "station": {
+      "_id": {
+        "path": "id"
+      },
+      "properties": {
+        "id": {
+          "type": "integer",
+          "index": "not_analyzed"
+        },
+        "pref_id": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "name": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "name_kana": {
+          "type": "string",
+          "index": "not_analyzed"
+        },
+        "property": {
+          "type": "string",
+          "index": "not_analyzed"
+        }
+      }
+    }
+  }
+}
